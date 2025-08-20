@@ -3,6 +3,7 @@ import random
 from typing import List
 
 import torch
+import torchaudio
 from torch.utils.data import Dataset
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class BaseDataset(Dataset):
         Returns:
             data_object (Tensor):
         """
-        data_object = torch.load(path)
+        data_object, sr = torchaudio.load(path, backend="soundfile")
         return data_object
 
     def preprocess_data(self, instance_data):

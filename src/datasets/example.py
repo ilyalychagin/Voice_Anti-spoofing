@@ -1,81 +1,82 @@
 import numpy as np
 import torch
-from tqdm.auto import tqdm
+
+from pathlib import Path
+from typing import Callable, Optional
 
 from src.datasets.base_dataset import BaseDataset
 from src.utils.io_utils import ROOT_PATH, read_json, write_json
 
-
-class ExampleDataset(BaseDataset):
+class VoiceSpoofDataset(BaseDataset):
     """
-    Example of a nested dataset class to show basic structure.
-
-    Uses random vectors as objects and random integers between
-    0 and n_classes-1 as labels.
+    Dataset for voice spoofing detection tasks.
+    
+    Contains audio files with corresponding labels indicating whether
+    the voice is bonafide or spoofed.
     """
 
     def __init__(
-        self, input_length, n_classes, dataset_length, name="train", *args, **kwargs
-    ):
+        self,
+        path2dir: str = None,
+        path2dscr: str = None,
+        transform: Optional[Callable] = None,
+        part: "str" = "train",
+        *args, **kwargs
+    ):        
         """
         Args:
-            input_length (int): length of the random vector.
-            n_classes (int): number of classes.
-            dataset_length (int): the total number of elements in
-                this random dataset.
-            name (str): partition name
+            transform (Optional[Callable]): transformation to apply to audio data
+            path2dir (str): path to directory containing audio files
+            path2dscr (str): path to descriptor file with metadata
+            part (str): partition name (train, val, test)
         """
-        index_path = ROOT_PATH / "data" / "example" / name / "index.json"
+        self.transform = transform
+        self.path2dir = path2dir
+        self.path2dscr = path2dscr
 
-        # each nested dataset class must have an index field that
-        # contains list of dicts. Each dict contains information about
-        # the object, including label, path, etc.
-        if index_path.exists():
-            index = read_json(str(index_path))
-        else:
-            index = self._create_index(input_length, n_classes, dataset_length, name)
+        index = self.create_or_load_index(part) 
 
         super().__init__(index, *args, **kwargs)
 
-    def _create_index(self, input_length, n_classes, dataset_length, name):
+    def create_or_load_index(self, part):
         """
-        Create index for the dataset. The function processes dataset metadata
-        and utilizes it to get information dict for each element of
-        the dataset.
-
+        Load existing index file or create new one if it doesn't exist.
+        
         Args:
-            input_length (int): length of the random vector.
-            n_classes (int): number of classes.
-            dataset_length (int): the total number of elements in
-                this random dataset.
-            name (str): partition name
+            part (str): partition name
+            
         Returns:
-            index (list[dict]): list, containing dict for each element of
-                the dataset. The dict has required metadata information,
-                such as label and object path.
+            index (list[dict]): list of dictionaries with file metadata
         """
-        index = []
-        data_path = ROOT_PATH / "data" / "example" / name
-        data_path.mkdir(exist_ok=True, parents=True)
+        index_path = ROOT_PATH / "data" / part / "index.json"
+        if not index_path.exists():
+            self.create_index(part)
+            
+        return read_json(index_path)
 
-        # to get pretty object names
-        number_of_zeros = int(np.log10(dataset_length)) + 1
+    def create_index(self, part):
+        """
+        Create index from descriptor file by parsing metadata and labels.
+        
+        Args:
+            part (str): partition name
+        """
+        path2dir = ROOT_PATH / self.path2dir
+        path2dscr = ROOT_PATH / self.path2dscr
 
-        # In this example, we create a synthesized dataset. However, in real
-        # tasks, you should process dataset metadata and append it
-        # to index. See other branches.
-        print("Creating Example Dataset")
-        for i in tqdm(range(dataset_length)):
-            # create dataset
-            example_path = data_path / f"{i:0{number_of_zeros}d}.pt"
-            example_data = torch.randn(input_length)
-            example_label = torch.randint(n_classes, size=(1,)).item()
-            torch.save(example_data, example_path)
+        file = []
+        with path2dscr.open("rt") as handle:
+            file = handle.readlines()
+    
+        index = [{"path": (path2dir / (line.split(' ')[1] + '.flac')).as_posix(),
+                  "label": line.split(' ')[4] == "spoof\n"} 
+                 for line in file]
 
-            # parse dataset metadata and append it to index
-            index.append({"path": str(example_path), "label": example_label})
+        torch.manual_seed(0)
+        indexes = torch.randperm(len(index))
+        train_indexes = indexes[:int(len(index))]
 
-        # write index to disk
-        write_json(index, str(data_path / "index.json"))
+        train_index = [index[i] for i in train_indexes]
 
-        return index
+        index_path = ROOT_PATH / "data" / part / "index.json"
+        write_json(train_index, str(index_path))

@@ -5,6 +5,8 @@ numpy==1.26.4
 tqdm
 matplotlib
 pandas
+torchaudio
+soundfile
 wandb
 comet_ml
 hydra-core
