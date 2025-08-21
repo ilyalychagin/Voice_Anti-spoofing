@@ -1,29 +1,16 @@
 train:
-  _target_: torch.utils.data.ConcatDataset # we can concat datasets if we want to
-  datasets:
-    - _target_: src.datasets.ExampleDataset
-      input_length: 1024
-      dataset_length: 15
-      n_classes: 10
-      name: "train15"
-      instance_transforms: ${transforms.instance_transforms.train}
-    - _target_: src.datasets.ExampleDataset
-      input_length: 1024
-      dataset_length: 20
-      n_classes: 10
-      name: "train20"
-      instance_transforms: ${transforms.instance_transforms.train}
+  _target_: src.datasets.VoiceSpoofDataset
+  path2dir: "data/LA/LA/ASVspoof2019_LA_train"
+  path2dscr: "data/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trl.txt"
+  part: "train"
+  
 val:
-  _target_: src.datasets.ExampleDataset
-  input_length: 1024
-  dataset_length: 15
-  n_classes: 10
-  name: "val"
-  instance_transforms: ${transforms.instance_transforms.inference}
+  _target_: src.datasets.VoiceSpoofDataset
+  path2dir: "data/LA/LA/ASVspoof2019_LA_dev"
+  path2dscr: "data/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
+  part: "val"
 test:
-  _target_: src.datasets.ExampleDataset
-  input_length: 1024
-  dataset_length: 15
-  n_classes: 10
-  name: "test"
-  instance_transforms: ${transforms.instance_transforms.inference}
+  _target_: src.datasets.VoiceSpoofDataset
+  path2dir: "data/LA/LA/ASVspoof2019_LA_eval"
+  path2dscr: "data/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt"
+  part: "eval"
