@@ -18,7 +18,7 @@ def collate_fn(data):
 
     for el in data:
         flacs.append(el['data_object'])
-        labels.append(el['label'])
+        labels.append(el['labels'])
 
     flacs = pad_sequence(flacs, batch_first=True)    
     labels = torch.Tensor(labels).long()

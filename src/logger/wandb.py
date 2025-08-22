@@ -54,6 +54,7 @@ class WandBWriter:
                 mode=mode,
                 save_code=kwargs.get("save_code", False),
             )
+
             self.wandb = wandb
 
         except ImportError:

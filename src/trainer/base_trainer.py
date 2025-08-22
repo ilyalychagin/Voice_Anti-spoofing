@@ -74,13 +74,15 @@ class BaseTrainer:
 
         # define dataloaders
         self.train_dataloader = dataloaders["train"]
-        if epoch_len is None:
-            # epoch-based training
-            self.epoch_len = len(self.train_dataloader)
-        else:
-            # iteration-based training
-            self.train_dataloader = inf_loop(self.train_dataloader)
-            self.epoch_len = epoch_len
+        
+        self.epoch_len = epoch_len
+        # if epoch_len is None:
+        #     # epoch-based training
+        #     self.epoch_len = len(self.train_dataloader)
+        # else:
+        #     # iteration-based training
+        #     self.train_dataloader = inf_loop(self.train_dataloader)
+        #     self.epoch_len = epoch_len
 
         self.evaluation_dataloaders = {
             k: v for k, v in dataloaders.items() if k != "train"

@@ -128,7 +128,7 @@ class ConvBlock(nn.Module):
         return self.block(x)
 
 
-class LCNN(nn.Module):
+class LCNNModel(nn.Module):
     """
     Light CNN for audio classification tasks.
     """
@@ -136,15 +136,11 @@ class LCNN(nn.Module):
     def __init__(self):
         """
         Initialize LCNN model.
-
-        Args:
-            config: Configuration object containing model parameters
         """
 
         super().__init__()
-        self.config = config
         
-        self.mel_spec = LogMelspec(config)
+        self.mel_spec = LogMelspec()
 
         self.feature_extractor = nn.Sequential(
             
@@ -189,7 +185,7 @@ class LCNN(nn.Module):
             nn.Linear(256, 2)
         )
 
-    def forward(self, x):
+    def forward(self, **batch):
         """
         Forward pass of LCNN model.
 
@@ -199,8 +195,8 @@ class LCNN(nn.Module):
         Returns:
             output (Dict[str, Tensor]): output dictionary containing logits
         """
-        x = self.mel_spec(x)
-        x = x.unsqueeze(1)
+        x = self.mel_spec(batch["data_object"])
+        #x = x.unsqueeze(1)
         
         x = self.feature_extractor(x)
 
