@@ -82,6 +82,7 @@ class BaseDataset(Dataset):
             data_object (Tensor):
         """
         data_object, sr = torchaudio.load(path, backend="soundfile")
+        data_object = data_object.sum(dim=0)
         return data_object
 
     def preprocess_data(self, instance_data):

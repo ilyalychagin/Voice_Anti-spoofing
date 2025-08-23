@@ -196,7 +196,7 @@ class LCNNModel(nn.Module):
             output (Dict[str, Tensor]): output dictionary containing logits
         """
         x = self.mel_spec(batch["data_object"])
-        #x = x.unsqueeze(1)
+        x = x.unsqueeze(1)
         
         x = self.feature_extractor(x)
 
