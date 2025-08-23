@@ -1,9 +1,9 @@
 train:
   _target_: src.datasets.VoiceSpoofDataset
   path2dir: "data/LA/LA/ASVspoof2019_LA_train/flac"
-  path2dscr: "data/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trl.txt"
+  path2dscr: "data/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
   part: "train"
-  
+
 val:
   _target_: src.datasets.VoiceSpoofDataset
   path2dir: "data/LA/LA/ASVspoof2019_LA_dev/flac"
