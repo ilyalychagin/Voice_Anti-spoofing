@@ -99,11 +99,11 @@ class BaseDataset(Dataset):
                 (a single dataset element) (possibly transformed via
                 instance transform).
         """
-        # if self.instance_transforms is not None:
-        #     for transform_name in self.instance_transforms.keys():
-        #         instance_data[transform_name] = self.instance_transforms[
-        #             transform_name
-        #         ](instance_data[transform_name])
+        if self.instance_transforms is not None:
+            for transform_name in self.instance_transforms.keys():
+                instance_data[transform_name] = self.instance_transforms[
+                    transform_name
+                ](instance_data[transform_name])
         return instance_data
 
     @staticmethod
