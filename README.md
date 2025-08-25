@@ -42,7 +42,7 @@ A step-by-step series of examples to get a development environment running.
 
 ### Results
 
-    * **EER:** 7% (Equal error rate)
+**EER:** 7% (Equal error rate)
 
 ## Acknowledgments
 
