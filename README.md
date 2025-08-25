@@ -2,8 +2,8 @@
 
 This project implements and trains a Countermeasure (CM) system to detect spoofing attacks (replays, synthetic speech, etc.) on the Logical Access (LA) partition of the ASVSpoof 2019 Dataset. The core architecture is a LightCNN (LCNN), implemented from scratch in PyTorch following the specifications from papers: 
 
-- **[Light CNN for Deep Face Recognition with Varied Illumination Conditions](https://arxiv.org/abs/1904.05576)** by Speech Technology Center - used as the foundation for the LightCNN architecture implementation
-- **[ASVspoof 2021: Towards Spoofed and Deepfake Speech Detection in the Wild](https://arxiv.org/abs/2103.11326)** - used for the training recipe and data preparation scheme
+- **[STC Antispoofing Systems for the ASVspoof2019 Challenge](https://arxiv.org/abs/1904.05576)** by Speech Technology Center - used as the foundation for the LightCNN architecture implementation
+- **[A Comparative Study on Recent Neural Spoofing Countermeasures for Synthetic Speech Detection](https://arxiv.org/abs/2103.11326)** - used for the training recipe and data preparation scheme
 
 ## Getting Started
 
@@ -39,6 +39,10 @@ A step-by-step series of examples to get a development environment running.
     python3 train.py
     ```
     The script will begin training the LightCNN model on the ASVSpoof 2019 LA training set.
+
+### Results
+
+    * **EER:** 7% (Equal error rate)
 
 ## Acknowledgments
 
